@@ -11,11 +11,11 @@ async function main() {
     const messages = [
         {
             role: "system",
-            content: `You are a smart personal assistent who answers the asked questions.
-                    You have access to following tools:
-                    1.searchWeb({query}:{query:string}) //Search the latest information and relatime data on the internet.
-                    current date and time:${new Date().toUTCString()}`
-                    
+            content: `You are a smart personal assistant who answers the asked questions.
+                You have access to following tools:
+                1. searchWeb({query}: {query: string}) //Search the latest information and realtime data on the internet.
+                current date and time: ${new Date().toUTCString()}`
+
         },
         // {
         //     role: "user",
@@ -26,7 +26,7 @@ async function main() {
     while (true) {
         //upper while is for user input
         const question = await rl.question('You: ');
-        if(question==='bye'){
+        if (question === 'bye') {
             break;
         }
         messages.push({
@@ -52,12 +52,12 @@ async function main() {
                                         "query": {
                                             "type": "string",
                                             "description": "The search query to perform search on."
-                                        },
+                                        }
                                     },
                                     "required": ["query"]
-                                }
-                            }
-                        }
+                                },
+                            },
+                        },
                     ],
                     tool_choice: 'auto',
                 });
@@ -90,6 +90,35 @@ async function main() {
                 }
             }
 
+            // for (const tool of toolCalls) {
+            //     const functionName = tool.function.name;
+            //     const functionParams = tool.function.arguments;
+
+            //     try {
+            //         // ✅ Try to parse only if valid JSON
+            //         let args;
+            //         try {
+            //             args = JSON.parse(functionParams);
+            //         } catch {
+            //             console.warn("⚠️ Invalid tool arguments:", functionParams);
+            //             continue; // Skip malformed call
+            //         }
+
+            //         if (functionName === "webSearch") {
+            //             const toolResult = await webSearch(args);
+
+            //             messages.push({
+            //                 tool_call_id: tool.id,
+            //                 role: "tool",
+            //                 name: functionName,
+            //                 content: toolResult
+            //             });
+            //         }
+            //     } catch (err) {
+            //         console.error("❌ Tool execution failed:", err.message);
+            //         return "Sorry, I couldn’t fetch the latest data right now.";
+            //     }
+            // }
         }
     }
     rl.close()
