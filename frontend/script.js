@@ -2,6 +2,8 @@ const input = document.querySelector("#input");
 const chatContainer = document.querySelector("#chat-container");
 const askBtn = document.querySelector('#ask');
 
+const threadId=Date.now().toString(36)+Math.random().toString(36).substring(2,8);
+
 input?.addEventListener('keyup', handleEnter);
 askBtn.addEventListener('click', handleAsk);
 
@@ -42,7 +44,7 @@ async function callServer(inputText) {
       headers: {
          'content-type': 'application/json'
       },
-      body: JSON.stringify({ message: inputText }),
+      body:JSON.stringify({ threadId:threadId,message: inputText }),
    });
 
    if (!response.ok) {

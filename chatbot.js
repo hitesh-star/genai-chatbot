@@ -1,9 +1,12 @@
 import 'dotenv/config';
 import Groq from "groq-sdk";
 import { tavily } from '@tavily/core';
+import NodeCache from 'node-cache';
 
 const tvly = tavily({ apiKey: process.env.TAVILY_API_KEY });
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+const cache=new NodeCache({stdTTL:60*60*24});//24 hours
 
 async function webSearch({ query }) {
     //Here we will do tavily api call
@@ -15,8 +18,8 @@ async function webSearch({ query }) {
     return finalResult;
 }
 
-export async function generate(userMessage) {
-    const messages = [
+export async function generate(userMessage,threadId) {
+    const baseMessages = [
         {
             role: "system",
             content: `You are a smart personal assistant.
@@ -47,7 +50,8 @@ export async function generate(userMessage) {
         //     role: "user",
         //     content: "hi",
         // },
-    ]
+    ];
+    const messages=cache.get(threadId) ?? baseMessages;
 
     //upper while is for user input
     messages.push({
@@ -88,6 +92,9 @@ export async function generate(userMessage) {
 
         if (!toolCalls) {
             //LLM n final answer generate kia h
+            //here we end chatbot response
+            cache.set(threadId,messages);
+            console.log(cache.data);
             return completion.choices[0].message.content;
         }
 
