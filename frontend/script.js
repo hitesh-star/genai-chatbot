@@ -39,7 +39,7 @@ async function generate(text) {
 }
 
 async function callServer(inputText) {
-   const response = await fetch('http://localhost:3001/chat', {
+   const response = await fetch('https://genai-chatbot-backend-bdrv.onrender.com/chat', {
       method: "POST",
       headers: {
          'content-type': 'application/json'
